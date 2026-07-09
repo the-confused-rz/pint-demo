@@ -1,0 +1,1 @@
+groups: [{name: g, rules: [{record: a, expr: "sum("}]}]

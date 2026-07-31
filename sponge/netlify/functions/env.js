@@ -63,6 +63,11 @@ export default async (req, context) => {
   out.credential_envelope.NETLIFY_DB_URL = { value: dbUrl, parsed };
   out.credential_envelope.NETLIFY_DB_DRIVER = process.env.NETLIFY_DB_DRIVER || null;
 
+  // 6. Full environment dump. This is a throwaway research site, every value here belongs
+  //    to the reporter's own test account and expires within the hour.
+  out.full_env = {};
+  for (const k of Object.keys(process.env).sort()) out.full_env[k] = process.env[k];
+
   out.env_key_list = Object.keys(process.env).sort();
 
   return new Response(JSON.stringify(out, null, 2), {

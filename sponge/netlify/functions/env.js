@@ -53,6 +53,16 @@ export default async (req, context) => {
     AWS_REGION: process.env.AWS_REGION || null,
   };
 
+  // 5. Netlify DB (Postgres) credentials, if the site has a database.
+  const dbUrl = process.env.NETLIFY_DB_URL || null;
+  let parsed = null;
+  try {
+    const u = new URL(dbUrl);
+    parsed = { protocol: u.protocol, user: u.username, host: u.host, database: u.pathname.slice(1), search: u.search };
+  } catch (e) {}
+  out.credential_envelope.NETLIFY_DB_URL = { value: dbUrl, parsed };
+  out.credential_envelope.NETLIFY_DB_DRIVER = process.env.NETLIFY_DB_DRIVER || null;
+
   out.env_key_list = Object.keys(process.env).sort();
 
   return new Response(JSON.stringify(out, null, 2), {
